@@ -1,4 +1,5 @@
 let readlineSync = require("readline-sync");
+let kuler = require("kuler");
 let a = 0;
 const database = {
     data: [
@@ -105,6 +106,19 @@ const database = {
     ]
 };
 
+const leaderBoard = {
+    data: []
+};
+
+function highScore(leaderBoard){
+    leaderBoard.data.push({name:username,score:a});
+    let sortedleaderboard = leaderBoard.data.sort((a,b)=>b.score-a.score);
+    for(let leader of sortedleaderboard)
+    {
+        console.log(`${leader.name} - Score : ${leader.score}`);
+    }
+}
+
 function show() {
     for (let i = 0; i < database.data.length; i++) {
         console.log(database.data[i].questions);
@@ -119,15 +133,18 @@ function show() {
         console.log(`You have selecetd the option ${selectedanswer} - ${database.data[i].options[selectedanswer]}`);
         if (selectedanswer === database.data[i].correctAnswer) {
             a = a + 5;
-            console.log('Congratulations ! Your answer is correct.')
+            console.log(kuler('Congratulations ! Your answer is correct.',"#4ade80"));
         }
         else {
             a = a - 2;
-            console.log('Oops ! Your option is wrong');
-            console.log(`Correct answer is ${database.data[i].correctAnswer} - ${database.data[i].options[database.data[i].correctAnswer]}`);
+            console.log(kuler('Oops ! Your option is wrong',"#e11d48"));
+            console.log(kuler(`Correct answer is ${database.data[i].correctAnswer} - ${database.data[i].options[database.data[i].correctAnswer]}`,"#4ade80"));
         }
-        console.log('\n\n');
+        console.log('\n');
     }
 }
+let username = readlineSync.question(kuler('What is your name\n',"#f0abfc"));
+console.log(kuler(`Hello ${username} welcome to the quiz`,"#b45309"))
 show();
-console.log(`Your score for the quiz is ${a} / ${database.data.length * 5}`);
+console.log(kuler(`Your score for the quiz is ${a} / ${database.data.length * 5}`,"#1d4ed8"));
+highScore(leaderBoard);
