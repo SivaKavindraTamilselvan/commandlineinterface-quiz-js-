@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width , initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        .options {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            padding: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button {
+            margin: 5px;
+            padding: 15px;
+            width: 100%;
+            font-size: medium;
+            text-align:justify;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .button:hover {
+            background-color: #d9f99d;
+            border-color: #3f6212;
+            border-style: solid;
+        }
+
+        body {
+            background-color: cadetblue;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            background-color: antiquewhite;
+            padding: 3%;
+            width: fit-content;
+            border-radius: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 50%;
+        }
+
+        #next {
+            padding: 12px;
+            display: none;
+        }
+
+        .ab {
+            display: flex;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to the Quiz</h1>
+        <div id="quiz">
+            <h2 id="question"></h2>
+            <div class="ab">
+                <div class="options" id="options"></div>
+            </div>
+
+            <div class="ab">
+                <button id="next">Next Button</button>
+            </div>
+            <div id="answer" class="answer"></div>
+        </div>
+        <div id="endquiz" style="display: none;">
+            <h2> Your score is : <span id="score"></span></h2>
+        </div>
+    </div>
+    <script>
+        const database = {
+            data: [
+                {
+                    questions: "Name the national bird of India.",
+                    options: {
+                        a: "Peacock",
+                        b: "Crow",
+                        c: "Pigeon",
+                        d: "Sparrow"
+                    },
+                    correctAnswer: "a"
+                },
+                {
+                    questions: "What is the capital of India?",
+                    options: {
+                        a: "Mumbai",
+                        b: "Delhi",
+                        c: "Kolkata",
+                        d: "Chennai"
+                    },
+                    correctAnswer: "b"
+                },
+                {
+                    questions: "Which planet is known as the Red Planet?",
+                    options: {
+                        a: "Earth",
+                        b: "Venus",
+                        c: "Mars",
+                        d: "Jupiter"
+                    },
+                    correctAnswer: "c"
+                },
+                {
+                    questions: "What is the largest mammal in the world?",
+                    options: {
+                        a: "Elephant",
+                        b: "Blue Whale",
+                        c: "Giraffe",
+                        d: "Shark"
+                    },
+                    correctAnswer: "b"
+                },
+                {
+                    questions: "Which is the smallest continent by land area?",
+                    options: {
+                        a: "Europe",
+                        b: "Australia",
+                        c: "Antarctica",
+                        d: "South America"
+                    },
+                    correctAnswer: "b"
+                },
+                {
+                    questions: "Who wrote the national anthem of India?",
+                    options: {
+                        a: "Rabindranath Tagore",
+                        b: "Bankim Chandra Chatterjee",
+                        c: "Subhas Chandra Bose",
+                        d: "Mahatma Gandhi"
+                    },
+                    correctAnswer: "a"
+                },
+                {
+                    questions: "Which gas do plants absorb from the atmosphere?",
+                    options: {
+                        a: "Oxygen",
+                        b: "Nitrogen",
+                        c: "Carbon Dioxide",
+                        d: "Hydrogen"
+                    },
+                    correctAnswer: "c"
+                },
+                {
+                    questions: "What is the boiling point of water at sea level?",
+                    options: {
+                        a: "100°C",
+                        b: "90°C",
+                        c: "120°C",
+                        d: "80°C"
+                    },
+                    correctAnswer: "a"
+                },
+                {
+                    questions: "Which is the tallest mountain in the world?",
+                    options: {
+                        a: "K2",
+                        b: "Mount Everest",
+                        c: "Kangchenjunga",
+                        d: "Makalu"
+                    },
+                    correctAnswer: "b"
+                },
+                {
+                    questions: "Which is the fastest land animal?",
+                    options: {
+                        a: "Cheetah",
+                        b: "Lion",
+                        c: "Horse",
+                        d: "Leopard"
+                    },
+                    correctAnswer: "a"
+                }
+            ]
+        };
+        const leaderboard = {
+            data: []
+        }
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const a = document.getElementById('quiz');
+        const b = document.getElementById('question');
+        const c = document.getElementById('options');
+        const d = document.getElementById('next');
+        const e = document.getElementById('answer');
+        const f = document.getElementById('endquiz');
+        const g = document.getElementById('score');
+
+        function showQuestion() {
+            const current = database.data[currentQuestionIndex];
+            b.textContent = current.questions;
+            for (const [key, value] of Object.entries(current.options)) {
+                const button = document.createElement('button');
+                button.textContent = `${key} - ${value}`;
+                button.className = 'button';
+                c.appendChild(button);
+                button.onclick = () => handleAnswer(key);
+            }
+        }
+
+        function handleAnswer(selectedAnswer) {
+            const current = database.data[currentQuestionIndex];
+            if (selectedAnswer === current.correctAnswer) {
+                score = score + 5;
+                e.textContent = 'Correct! +5 score';
+            }
+            else {
+                score = score - 2;
+                e.textContent = 'Wrong! -2 points';
+            }
+            Array.from(c.children).forEach(btn => (btn.disabled = true));
+            d.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < database.data.length) {
+                c.textContent = '';
+                d.style.display = 'none';
+                e.textContent = '';
+                showQuestion();
+            }
+            else {
+                showscore();
+            }
+        }
+
+        function showscore() {
+            a.style.display = 'none';
+            f.style.display = 'block';
+            g.textContent = `${score}`;
+        }
+
+        d.onclick = nextQuestion;
+        showQuestion();
+    </script>
+</body>
+
+</html>
